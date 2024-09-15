@@ -1,12 +1,12 @@
 from sqlalchemy import Column, Integer, String, PickleType
 
-from .database import Base
+from ..database import Base
 
 class User(Base):
     __tablename__ = "users"
 
-    student_id = Column(String, unique=True, primary_key=True)
-    username = Column(String, index=True)
+    student_id = Column(String, unique=True, primary_key=True, index=True)
+    username = Column(String)
     email = Column(String, unique=True, index=True)
     password = Column(String)
     full_name = Column(String)

@@ -2,7 +2,9 @@ from fastapi import APIRouter, HTTPException, Depends
 from fastapi.responses import JSONResponse
 
 from sqlalchemy.orm import Session
-from ..database import crud, user
+
+from ..database.db_models import user
+from ..database import crud
 from ..database.database import SessionLocal, engine
 from ..models.userModel import UserModel, CreateUserModel
 

@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import or_
 from ..auth import hashed
 
-from .user import User
+from .db_models.user import User
 from ..models import userModel
 
 def get_user(db: Session, student_id: str, email: str):
@@ -16,3 +16,4 @@ def create_user(db: Session, user_model: userModel.CreateUserModel):
     db.refresh(db_user)
     
     return db_user
+

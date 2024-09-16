@@ -12,3 +12,6 @@ class User(Base):
     full_name = Column(String)
     solved_problems = Column(PickleType, default=[])
     score = Column(Integer, default=0)
+    role = Column(String, default="student")
+
+

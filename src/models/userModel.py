@@ -1,20 +1,19 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 
-class BaseUserModel(BaseModel):
+class UserModel(BaseModel):
     username: str
-    email: str
+    email: EmailStr
     full_name: str
     student_id: str
+    role: str = "student"
 
-    class Config:
-        orm_mode = True
-
-class CreateUserModel(BaseUserModel):   
-    password: str
-    
-    class Config:
-        orm_mode = True
-
-class UserModel(CreateUserModel):
+class CreateUserModel(UserModel):   
     solved_problems: list = []
     score: int = 0
+    password: str
+
+class ResponseUserModel(UserModel):
+    session: str
+    solved_problems: list
+    score: int
+

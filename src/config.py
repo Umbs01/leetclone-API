@@ -6,6 +6,8 @@ class Setting(BaseSettings):
 
     DATABASE_URL: str
     JWT_SECRET_KEY: str
+    ALGORITHM: str
+    ACCESS_TOKEN_EXPIRE_MINUTES: int
 
 @lru_cache()
 def get_settings() -> Setting:

@@ -23,7 +23,6 @@ def register(creds: RegisterModel, db: Session = Depends(get_db)):
             username=creds.username,
             email=creds.email,
             password=creds.password,
-            full_name=creds.full_name,
             solved_problems=[],
             score=0,
             role="student"

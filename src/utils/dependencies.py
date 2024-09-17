@@ -4,7 +4,7 @@ from jwt import PyJWTError
 from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from ..database.db_models.user import User
+from ..database.db_models.users import User
 from ..config import get_settings
 from ..database.users_crud import get_user_by_student_id
 from ..database.database import SessionLocal 

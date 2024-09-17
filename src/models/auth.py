@@ -15,5 +15,4 @@ class RegisterResponseModel(BaseModel):
 class RegisterModel(LoginModel):
     student_id: str
     username: str
-    full_name: str
 

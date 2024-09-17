@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import or_
 from ..utils.security import hash_password 
 
-from .db_models.user import User
+from .db_models.users import User
 from ..models import userModel
 
 # Get user by student_id or email
@@ -16,7 +16,6 @@ def create_user(db: Session, user_model: userModel.CreateUserModel):
                    , username = user_model.username
                    , email = user_model.email
                    , password = hashed_password
-                   , full_name = user_model.full_name
                    , solved_problems = user_model.solved_problems
                    , score = user_model.score
                    , role = user_model.role

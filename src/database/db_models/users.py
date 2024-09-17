@@ -9,7 +9,6 @@ class User(Base):
     username = Column(String)
     email = Column(String, unique=True, index=True)
     password = Column(String)
-    full_name = Column(String)
     solved_problems = Column(PickleType, default=[])
     score = Column(Integer, default=0)
     role = Column(String, default="student")

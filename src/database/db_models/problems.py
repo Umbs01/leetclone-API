@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, PickleType
+from sqlalchemy import ForeignKey
 
 from ..database import Base
 
@@ -8,7 +9,7 @@ class Problems(Base):
     id = Column(Integer, unique=True, primary_key=True, index=True)
     title = Column(String)
     score = Column(Integer)
-    hints = Column(PickleType, default=[])
+    hint = Column(String)
     hint_cost = Column(Integer, default=0)
     description = Column(String)
     test_cases = Column(PickleType, default=[])
@@ -17,7 +18,7 @@ class Problems(Base):
     solution = Column(String)
     difficulty = Column(String)
     tags = Column(PickleType, default=[])
-    author = Column(String, reference="users.username")
+    author = Column(String, ForeignKey("users.username"))
     status = Column(String, default="draft")
     solves = Column(Integer, default=0)
     created_at = Column(String)

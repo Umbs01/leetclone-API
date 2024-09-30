@@ -9,7 +9,8 @@ class ProblemModel(BaseModel):
     tags: list
     hint_cost: int
     test_cases: list
-    io_format: str
+    input_format: str
+    output_format: str
     author: str
     status: str
     solves: int

@@ -1,10 +1,10 @@
 from sqlalchemy.orm import Session
 
 from .db_models.problems import Problems
-from ..models import problemModel
+from ..models.problemModel import CreateProblemModel
 
 # Create problem
-def create_problem(db: Session, problem_model: problemModel.CreateProblemModel):
+def create_problem(db: Session, problem_model: CreateProblemModel):
     db_problem = Problems(title = problem_model.title
                           , score = problem_model.points
                           , hint = problem_model.hint
@@ -12,7 +12,8 @@ def create_problem(db: Session, problem_model: problemModel.CreateProblemModel):
                           , description = problem_model.description
                           , test_cases = problem_model.test_cases
                           , hidden_test_cases = problem_model.hidden_test_cases
-                          , io_format = problem_model.io_format
+                          , input_format = problem_model.input_format
+                          , output_format = problem_model.output_format
                           , solution = problem_model.solution
                           , difficulty = problem_model.difficulty
                           , tags = problem_model.tags

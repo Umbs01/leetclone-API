@@ -6,11 +6,11 @@ class User(Base):
     __tablename__ = "users"
 
     student_id = Column(String, unique=True, primary_key=True, index=True)
-    username = Column(String)
-    email = Column(String, unique=True, index=True)
-    password = Column(String)
+    username = Column(String, nullable=False)
+    email = Column(String, unique=True, index=True, nullable=False)
+    password = Column(String, nullable=False)
     solved_problems = Column(PickleType, default=[])
     score = Column(Integer, default=0)
     role = Column(String, default="student")
-
+    
 

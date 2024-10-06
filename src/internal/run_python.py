@@ -18,8 +18,18 @@ def run_code(text):
         output = result.stdout.decode('utf-8')
         errors = result.stderr.decode('utf-8')
 
-        with open(f'{get_settings().SANDBOX_PATH}/output.txt', 'w') as f:
-            f.write(output)
+        try:
+            command = f"echo '{output}' > sudo tee {get_settings().SANDBOX_PATH}/output.txt"
+            result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+            stdout = result.stdout.decode('utf-8') # output
+            stderr = result.stderr.decode('utf-8') # errors
+
+            if stderr:
+                raise Exception(f"Error writing output: {stderr}")
+            
+        except Exception as e:
+            print(e)
 
         if errors:
             raise subprocess.CalledProcessError(1, 'isolate', output=errors)

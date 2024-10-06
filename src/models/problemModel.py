@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional
+from uuid import UUID
 
 class ProblemModel(BaseModel):
     title: str
@@ -21,7 +22,7 @@ class CreateProblemModel(ProblemModel):
     solution: str
 
 class SimpleProblemModel(BaseModel):
-    id: str
+    id: UUID
     title: str
     difficulty: str
     points: int

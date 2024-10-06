@@ -12,7 +12,7 @@ def run_code(text):
         subprocess.run(['sudo', 'mv', 'script.py', f'{get_settings().SANDBOX_PATH}/box'], check=True)
 
         # Run the script with memory and time limits
-        result = subprocess.run(['sudo', 'isolate', '--box-id=0', '--mem=102400', '--time=3', '--run', '--', '/usr/bin/python3', 'script.py'],
+        result = subprocess.run(['sudo', 'isolate', '--box-id=0', '--mem=102400', '--time=3', '--run', '--', '/usr/bin/python3', f'{get_settings().SANDBOX_PATH}/box/script.py'],
                                 check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         # Capture output and errors

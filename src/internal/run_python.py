@@ -2,19 +2,14 @@ import subprocess
 from ..config import get_settings
 
 def run_code(text):
-    # Initialize isolate
-    try:
-        subprocess.run(['sudo', 'isolate', '--init'], check=True)
-    except subprocess.CalledProcessError as e:
-        raise Exception(f"Error running command")
-
     # Write code to file 'script.py'
     with open('script.py', 'w') as f:
         f.write(text)
 
     # Initialize isolate & move script.py to the isolate directory
-    try:    
-        subprocess.run(['sudo', 'mv', 'script.py', f'{get_settings().SANDBOX_PATH}'], check=True)
+    try:
+        subprocess.run(['sudo', 'isolate', '--init'], check=True)
+        subprocess.run(['sudo', 'mv', 'script.py', f'{get_settings().SANDBOX_PATH}/box'], check=True)
 
         # Run the script with memory and time limits
         result = subprocess.run(['sudo', 'isolate', '--box-id=0', '--mem=102400', '--time=3', '--run', '--', '/usr/bin/python3', 'script.py'],
@@ -37,15 +32,14 @@ def run_code(text):
             print(e)
 
         if errors:
-            subprocess.run([f"/bin/echo 'error : {errors}'", "|", "sudo", "/bin/tee", f"{get_settings().SANDBOX_PATH}/output.txt"]
-                                    , stdout=subprocess.PIPE, stderr=subprocess.PIPE) # store errors in output.txt
+            raise subprocess.CalledProcessError(1, 'isolate', output=errors)
 
     except subprocess.CalledProcessError as e:
         print(f"Error running command: {e}")
 
 def read_output():
     try:
-        result = subprocess.run(        
+        result = subprocess.run(
             ['sudo', '/bin/cat', f'{get_settings().SANDBOX_PATH}/output.txt'], 
             stdout=subprocess.PIPE,  # output
             stderr=subprocess.PIPE   # errors

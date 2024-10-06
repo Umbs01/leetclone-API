@@ -9,7 +9,7 @@ def run_code(text):
     # Initialize isolate & move script.py to the isolate directory
     try:
         subprocess.run(['sudo', 'isolate', '--init'], check=True)
-        subprocess.run(['sudo', 'mv', 'script.py', f'{get_settings().SANDBOX_PATH}/box'], check=True)
+        subprocess.run(['sudo', 'mv', 'script.py', f'{get_settings().SANDBOX_PATH}/0/box'], check=True)
 
         # Run the script with memory and time limits
         result = subprocess.run(['sudo', 'isolate', '--box-id=0', '--mem=102400', '--time=3', '--run', '--', '/usr/bin/python3', 'script.py'],
@@ -33,14 +33,14 @@ def run_code(text):
             print(e)
 
         if errors:
-            raise subprocess.CalledProcessError(1, 'isolate', output=errors)
+            raise Exception(f"Error running code: {errors}")
 
     except subprocess.CalledProcessError as e:
         print(f"Error running command: {e}")
 
 def read_output():
     try:
-        result = subprocess.run(
+        result = subprocess.run(        
             ['sudo', '/bin/cat', f'{get_settings().SANDBOX_PATH}/output.txt'], 
             stdout=subprocess.PIPE,  # output
             stderr=subprocess.PIPE   # errors

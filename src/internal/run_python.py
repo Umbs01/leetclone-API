@@ -2,13 +2,18 @@ import subprocess
 from ..config import get_settings
 
 def run_code(text):
+    # Initialize isolate
+    try:
+        subprocess.run(['sudo', 'isolate', '--init'], check=True)
+    except subprocess.CalledProcessError as e:
+        raise Exception(f"Error running command")
+
     # Write code to file 'script.py'
     with open('script.py', 'w') as f:
         f.write(text)
 
     # Initialize isolate & move script.py to the isolate directory
-    try:
-        subprocess.run(['sudo', 'isolate', '--init'], check=True)
+    try:    
         subprocess.run(['sudo', 'mv', 'script.py', f'{get_settings().SANDBOX_PATH}/0/box'], check=True)
 
         # Run the script with memory and time limits

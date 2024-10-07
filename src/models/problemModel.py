@@ -42,3 +42,9 @@ class UpdateProblemModel(BaseModel):
     status: Optional[str]
     hidden_test_cases: Optional[list]
     solution: Optional[str]
+
+class ProblemSubmitModel(BaseModel):
+    test_cases: list
+    code: str
+    
+    

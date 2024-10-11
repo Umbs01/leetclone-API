@@ -1,8 +1,8 @@
 from datetime import datetime
 from sqlalchemy.orm import Session
 
-from .db_models.problems import Problems
-from ..models.problemModel import CreateProblemModel, UpdateProblemModel
+from ..database.db_models.problems import Problems
+from ..models.problems import CreateProblemModel, UpdateProblemModel
 
 # get all problems
 def get_all_problems(db: Session):

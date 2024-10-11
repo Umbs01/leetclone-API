@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from ..database.db_models.users import User
 from ..config import get_settings
-from ..database.users_crud import get_user_by_student_id
+from ..internal.users_crud import get_user_by_student_id
 from ..database.database import SessionLocal 
 from ..utils.security import verify_password
 

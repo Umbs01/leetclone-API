@@ -2,8 +2,8 @@ from fastapi import APIRouter, HTTPException, Depends
 
 from sqlalchemy.orm import Session  
 
-from ..database import problems_crud
-from ..models.problemModel import ProblemModel, UpdateProblemModel, CreateProblemModel, SimpleProblemModel
+from ..internal import problems_crud
+from ..models.problems import ProblemModel, UpdateProblemModel, CreateProblemModel, SimpleProblemModel
 from ..utils.dependencies import get_db
 
 router = APIRouter(prefix="/problems", tags=["problems"], responses={404: {"description": "Not found"}})

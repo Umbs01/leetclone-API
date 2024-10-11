@@ -3,8 +3,8 @@ from fastapi.responses import JSONResponse
 
 from ..utils.dependencies import get_db
 from ..internal.run_python import run_code, read_output 
-from ..models.problemModel import ProblemSubmitModel
-from ..database.problems_crud import get_problem_by_id
+from ..models.problems import ProblemSubmitModel
+from ..internal.problems_crud import get_problem_by_id
 
 router = APIRouter(prefix="/run-code", tags=["run-code"], responses={404: {"description": "Not found"}})
 

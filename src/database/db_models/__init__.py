@@ -1,3 +1,4 @@
+from ..database import Base 
 from .users import User
 from .problems import Problems
-from ..database import Base 
+from .submissions import Submission

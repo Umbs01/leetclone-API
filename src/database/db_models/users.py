@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, PickleType
+from sqlalchemy.orm import relationship
 
 from ..database import Base
 
@@ -13,4 +14,4 @@ class User(Base):
     score = Column(Integer, default=0)
     role = Column(String, default="student")
     
-
+    submissions = relationship("Submission", back_populates="own")

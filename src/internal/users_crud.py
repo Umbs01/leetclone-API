@@ -6,15 +6,15 @@ from ..database.db_models.users import User
 from ..models import users
 
 # Get all users
-def get_users(db: Session):
+def get_users(db: Session) -> list[User]:
     return db.query(User).all()
 
 # Get user by student_id or email
-def get_user(db: Session, student_id: str, email: str):
+def get_user(db: Session, student_id: str, email: str) -> User:
     return db.query(User).filter(or_(User.student_id == student_id, User.email == email)).first()
 
 # Create user referencing the fastapi docs
-def create_user(db: Session, user_model: users.CreateUserModel):
+def create_user(db: Session, user_model: users.CreateUserModel) -> User:
     hashed_password = hash_password(user_model.password)
     db_user = User(student_id = user_model.student_id
                    , username = user_model.username
@@ -31,6 +31,6 @@ def create_user(db: Session, user_model: users.CreateUserModel):
     return db_user
 
 # Get user by student_id
-def get_user_by_student_id(db: Session, student_id: str):
+def get_user_by_student_id(db: Session, student_id: str) -> User:
     return db.query(User).filter(User.student_id == student_id).first()
 

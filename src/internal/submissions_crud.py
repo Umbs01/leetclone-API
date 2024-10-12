@@ -24,7 +24,12 @@ def submit(db: Session, submission: SubmissionModel):
                                , created_at = time_now 
                                )
     db.add(db_submission)
-    
+
+    # Check if user already solved this problem
+    if any(solved_problem["problem_id"] == submission.problem_id for solved_problem in owner.solved_problems):
+        raise ValueError("User already solved this problem")
+
+    # If the submission is accepted, update the user's score and the problem's solves
     if result:
         owner.solved_problems.append({"problem_id": submission.problem_id, "difficulty": problem.difficulty})
         owner.score = owner.score + problem.points # type: ignore
@@ -40,6 +45,4 @@ def submit(db: Session, submission: SubmissionModel):
 
 def get_submissions_by_user(db: Session, user_id: str):
     return db.query(Submission).filter(Submission.owner == user_id).all()
-
-
 

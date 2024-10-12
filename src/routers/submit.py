@@ -15,3 +15,4 @@ def submitproblem(submission: SubmissionModel, db = Depends(get_db)):
 @router.get("/{user_id}")
 def getsubmissions(user_id: str, db = Depends(get_db)):
     return get_submissions_by_user(db, user_id)
+

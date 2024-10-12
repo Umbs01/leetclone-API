@@ -12,7 +12,6 @@ class CreateUserModel(UserModel):
     password: str
 
 class ResponseUserModel(UserModel):
-    session: str
+    # session: str
     solved_problems: list
     score: int
-

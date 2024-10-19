@@ -10,6 +10,7 @@ class CreateUserModel(UserModel):
     solved_problems: list = []
     score: int = 0
     password: str
+    hint_used: list = []
 
 class ResponseUserModel(UserModel):
     # session: str

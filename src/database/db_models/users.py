@@ -14,6 +14,7 @@ class User(Base):
     password = Column(String, nullable=False)
     solved_problems = Column(MutableList.as_mutable(PickleType), default=[]) # type: ignore
     score = Column(Integer, default=0)
+    hint_used = Column(MutableList.as_mutable(PickleType), default=[]) # type: ignore
     role = Column(String, default="student")
     
     submissions = relationship("Submission", back_populates="own")

@@ -1,8 +1,11 @@
 from datetime import datetime
 from sqlalchemy.orm import Session
+from sqlalchemy import any_
 
 from ..database.db_models.problems import Problems
 from ..models.problems import CreateProblemModel, UpdateProblemModel
+
+import json
 
 # get all problems
 def get_all_problems(db: Session):
@@ -66,3 +69,18 @@ def delete_problem(db: Session, id: str):
     db.commit()
     
     return db_problem
+
+def get_problem_by_difficulty(db: Session, difficulty: str):
+    return db.query(Problems).filter(Problems.difficulty == difficulty).all()
+
+def get_problem_by_tag(db: Session, tag: str):
+    problems = db.query(Problems).all()
+    return [problem for problem in problems if tag in problem.tags]
+
+
+def get_hint(db: Session, id: str):
+    db_problem = get_problem_by_id(db, id)
+    if not db_problem:
+        return None
+    
+    return db_problem.hint

@@ -28,6 +28,9 @@ class SimpleProblemModel(BaseModel):
     points: int
     tags: list
 
+    class Config:
+        from_attributes = True
+
 class UpdateProblemModel(BaseModel):
     title: Optional[str]
     description: Optional[str]
@@ -42,3 +45,9 @@ class UpdateProblemModel(BaseModel):
     status: Optional[str]
     hidden_test_cases: Optional[list]
     solution: Optional[str]
+
+class ProblemSubmitModel(BaseModel):
+    test_cases: list
+    code: str
+    
+    

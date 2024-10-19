@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from ..database.db_models.users import User
 from ..config import get_settings
-from ..database.users_crud import get_user_by_student_id
+from ..internal.users_crud import get_user_by_student_id
 from ..database.database import SessionLocal 
 from ..utils.security import verify_password
 
@@ -44,7 +44,7 @@ def create_access_token(data: dict):
     return encoded_jwt
 
 # Users with the token is able to access the protected resources
-def get_current_user(token: str = Depends(oauth2_scheme)):
+def get_current_user(db: Session, token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(
         status_code=401,
         detail="Could not validate credentials",
@@ -65,3 +65,4 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
     if user is None:
         raise credentials_exception
     return user
+

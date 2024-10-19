@@ -1,10 +1,10 @@
 from fastapi import APIRouter, HTTPException, Depends
-
+from typing import List
 from sqlalchemy.orm import Session  
 
-from ..database import problems_crud
-from ..models.problemModel import ProblemModel, UpdateProblemModel, CreateProblemModel, SimpleProblemModel
-from ..utils.dependencies import get_db
+from ..internal import problems_crud
+from ..models.problems import ProblemModel, UpdateProblemModel, CreateProblemModel, SimpleProblemModel
+from ..utils.dependencies import get_db, get_current_user
 
 router = APIRouter(prefix="/problems", tags=["problems"], responses={404: {"description": "Not found"}})
 
@@ -75,9 +75,58 @@ def update_problem(id: str, problem: UpdateProblemModel, db: Session = Depends(g
     return problems_crud.update_problem(db, id, problem)
 
 @router.delete("/delete/{id}")
-def delete_problem(id: str, db: Session = Depends(get_db)):
+def delete_problem(id: str, token: str, db: Session = Depends(get_db)):
     db_problem = problems_crud.get_problem_by_title(db, id)
     if not db_problem:
         raise HTTPException(status_code=404, detail="Problem not found")
     
-    return problems_crud.delete_problem(db, id)
+    user = get_current_user(db, token)
+    if user:
+        if user.role != "admin": # type: ignore
+            raise HTTPException(status_code=400, detail="Not enough permission")
+        else:
+            return problems_crud.delete_problem(db, id)
+    return None
+
+
+@router.get("/search/{title}", response_model=SimpleProblemModel)
+def search_problem_by_title(title: str, db: Session = Depends(get_db)):
+    db_problem = problems_crud.get_problem_by_title(db, title)
+    if not db_problem:
+        raise HTTPException(status_code=404, detail="Problem not found")
+    return db_problem
+
+
+@router.get("/tags/{tag}", response_model=List[SimpleProblemModel])
+def search_problem_by_tag(tag: str, db: Session = Depends(get_db)):
+    db_problem = problems_crud.get_problem_by_tag(db, tag)
+    if not db_problem:
+        raise HTTPException(status_code=404, detail="Problem not found")
+    return [SimpleProblemModel.from_orm(problem) for problem in db_problem]
+
+@router.get("/difficulty/{difficulty}", response_model=List[SimpleProblemModel])
+def search_problem_by_difficulty(difficulty: str, db: Session = Depends(get_db)):
+    db_problem = problems_crud.get_problem_by_difficulty(db, difficulty)
+    if not db_problem:
+        raise HTTPException(status_code=404, detail="Problem not found")
+    return db_problem
+
+
+@router.post("/hint/{id}")
+def get_hint(id: str, token: str, db: Session = Depends(get_db)):
+    db_problem = problems_crud.get_problem_by_id(db, id)
+    if not db_problem:
+        raise HTTPException(status_code=404, detail="Problem not found")
+
+    user = get_current_user(db, token)
+    if user:
+        if user.score < db_problem.hint_cost: # type: ignore
+            raise HTTPException(status_code=400, detail="Not enough score")
+        if id in user.hint_used:
+            raise HTTPException(status_code=400, detail="Hint already used")
+        user.score -= db_problem.hint_cost # type: ignore
+        user.hint_used.append(id)
+        db.commit()
+        db.refresh(user)
+    
+    return problems_crud.get_hint(db, id)

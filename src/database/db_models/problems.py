@@ -1,6 +1,6 @@
-from sqlalchemy import Column, Integer, String, PickleType, DateTime
+from sqlalchemy import Column, Integer, String, PickleType, DateTime, ForeignKey
+from sqlalchemy.orm import relationship
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy import ForeignKey
 import uuid
 
 from ..database import Base
@@ -26,3 +26,5 @@ class Problems(Base):
     solves = Column(Integer, default=0, nullable=False)
     created_at = Column(DateTime, nullable=False)
     updated_at = Column(DateTime)
+
+    submissions = relationship("Submission", back_populates="prob")

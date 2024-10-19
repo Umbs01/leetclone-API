@@ -2,8 +2,8 @@ from fastapi import APIRouter, HTTPException, Depends
 
 from sqlalchemy.orm import Session
 
-from ..database import users_crud
-from ..models.userModel import UserModel, CreateUserModel
+from ..internal import users_crud
+from ..models.users import UserModel, CreateUserModel
 from ..models.auth import LoginModel, LoginResponseModel, RegisterModel
 from ..utils.dependencies import get_db, authenticate_user, create_access_token
 
@@ -25,7 +25,8 @@ def register(creds: RegisterModel, db: Session = Depends(get_db)):
             password=creds.password,
             solved_problems=[],
             score=0,
-            role="student"
+            role="student",
+            hint_used=[]
         )
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

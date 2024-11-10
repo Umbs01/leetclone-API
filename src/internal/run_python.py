@@ -1,7 +1,7 @@
 import subprocess
 from ..config import get_settings
 
-def run_code(text):
+def run_code(text, *args):
     # Write code to file 'script.py'
     with open('script.py', 'w') as f:
         f.write(text)
@@ -12,7 +12,7 @@ def run_code(text):
         subprocess.run(['sudo', 'mv', 'script.py', f'{get_settings().SANDBOX_PATH}/0/box'], check=True)
 
         # Run the script with memory and time limits
-        result = subprocess.run(['sudo', 'isolate', '--box-id=0', '--mem=102400', '--time=3', '--run', '--', '/usr/bin/python3', 'script.py'],
+        result = subprocess.run(['sudo', 'isolate', '--box-id=0', '--mem=102400', '--time=3', '--run', '--', '/usr/bin/python3', 'script.py', *args ],
                                 check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         output = result.stdout.decode('utf-8')
@@ -20,8 +20,8 @@ def run_code(text):
 
         try:
             # Write output to file 'output.txt'
-            result = subprocess.run([f"/bin/echo '{output}'", "|", "sudo", "/bin/tee", f"{get_settings().SANDBOX_PATH}/output.txt"]
-                                    , stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            result = subprocess.run(['sudo', 'tee', f'{get_settings().SANDBOX_PATH}/output.txt'], input=output.encode('utf-8'),
+                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
             stderr = result.stderr.decode('utf-8') # errors
 

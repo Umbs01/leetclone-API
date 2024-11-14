@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
 
 from ..utils.dependencies import get_db
-from ..internal.run_python import run_code, read_output 
+from ..internal.run_python import run_code, read_output, combine_code 
 from ..models.problems import ProblemSubmitModel
 from ..internal.problems_crud import get_problem_by_id
 
@@ -22,7 +22,13 @@ def run(problem_model: ProblemSubmitModel, id: str, db=Depends(get_db)):
     if problem_model.test_cases != problem.test_cases:
         return JSONResponse(content={"error": "Invalid test case"})
     
+    # combine template with the submitted code
+    full_code = combine_code(problem.template, problem_model.code)
+    
     # run the code with or without test cases
-    run_code(problem_model.code, *problem.test_cases) if problem.test_cases else run_code(problem_model.code)
+    if len(problem.test_cases) > 0: # type: ignore
+        run_code(full_code, *problem.test_cases) 
+    else:
+        run_code(full_code)
     
     return JSONResponse(content={"output": read_output()})

@@ -55,3 +55,7 @@ def read_output():
 
     except Exception as e:
         return str(e)
+
+
+def combine_code(template, code) -> str:
+    return template + '\n' + code

@@ -1,8 +1,23 @@
-from .run_python import read_output
+def trim(code: str) -> str:
+    code = code.replace('\n', '') # removes newlines
+    # removes leading and trailing whitespaces
+    return code.strip()
 
-def check_output(): # will do this after finals
-    pass
+def check_output(outputs: list[str], testcases: list[dict]) -> list: # will do this after finals
+    results = []
+    for output, testcase in zip(outputs, testcases):
+        output = trim(output)
+        if output == testcase['output']:
+            results.append(True)
+        else:
+            results.append(False)
+    results = zip(testcases, results)
+    return results # type: ignore
 
-def isAccepted(code: str) -> bool:
-    # returns boolean
+def isAccepted(results: list) -> bool:
+    # check if all test cases passed (all True)
+    for _, result in results:
+        if not result:
+            return False
+
     return True

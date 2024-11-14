@@ -29,13 +29,17 @@ def run_code(text, *args):
                 raise Exception(f"Error writing output: {stderr}")
             
         except Exception as e:
-            print(e)
+            raise Exception(f"Error writing output: {e}")
 
+        # if code cannot be interpreted, write the error to 'output.txt'
         if errors:
+            subprocess.run(['sudo', 'tee', f'{get_settings().SANDBOX_PATH}/output.txt'], input=errors.encode('utf-8'),
+                            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             raise subprocess.CalledProcessError(1, 'isolate', output=errors)
-
+    
     except subprocess.CalledProcessError as e:
         print(f"Error running command: {e}")
+
 
 def read_output():
     try:
@@ -59,3 +63,22 @@ def read_output():
 
 def combine_code(template, code) -> str:
     return template + '\n' + code
+
+# input = "1 2 3 4 5" called to run_code(code, 1, 2, 3, 4, 5)
+def parsing_input(input: str) -> list:
+    return input.split(' ')
+
+def handle_run_code(code: str, test_cases: list[dict]) -> list:
+    results = []
+    if test_cases == []:
+        run_code(code)
+        output = read_output()
+        results.append(output)
+        return results
+    
+    for test_case in test_cases:
+        inputs = parsing_input(test_case['input'])
+        run_code(code, *inputs)
+        output = read_output()
+        results.append(output)
+    return results

@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from datetime import datetime
 from ..database.db_models import Submission
 from ..models.submission import SubmissionModel
+from .run_python import handle_run_code
 from .grader import isAccepted
 from .problems_crud import get_problem_by_id
 from .users_crud import get_user_by_student_id
@@ -10,7 +11,14 @@ def submit(db: Session, submission: SubmissionModel):
     time_now = datetime.now()
     owner = get_user_by_student_id(db, submission.owner)
     problem = get_problem_by_id(db, submission.problem_id)
-    result = isAccepted(submission.code)
+
+    # combine submitted code with template
+    full_code = problem.template + submission.code # type: ignore
+    # combine hidden test cases with test cases
+    all_test_cases = problem.test_cases + problem.hidden_test_cases # type: ignore
+    # run the code and grade it
+    outputs = handle_run_code(full_code, all_test_cases) # type: ignore
+    result = isAccepted(outputs, all_test_cases) # type: ignore
     
     if not owner:
         raise ValueError("User not found")

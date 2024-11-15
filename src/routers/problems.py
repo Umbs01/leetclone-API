@@ -41,7 +41,9 @@ def create_problem(problem: CreateProblemModel, db: Session = Depends(get_db)):
             tags=problem.tags,
             author=problem.author,
             status=problem.status,
-            solves=problem.solves
+            solves=0,
+            template=problem.template,
+            starter=problem.starter
         )
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -68,6 +70,8 @@ def update_problem(id: str, problem: UpdateProblemModel, db: Session = Depends(g
             difficulty=problem.difficulty,
             tags=problem.tags,
             status=problem.status,
+            template=problem.template,
+            starter=problem.starter
         )
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

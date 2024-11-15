@@ -1,0 +1,45 @@
+meta {
+  name: Create-Problem-2
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://161.246.5.48:3777/problems/create
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "title": "Please help! Im getting F",
+    "description": "Please write a program to calculate grades for me with the following criteria:\nIf the score is >= 80, the grade is A\nIf the score is >= 75, the grade is B+\nIf the score is >= 70, the grade is B\nIf the score is >= 65, the grade is C+\nIf the score is >= 60, the grade is C\nIf the score is >= 55, the grade is D+\nIf the score is >= 50, the grade is D\nOtherwise, the grade is F",
+    "difficulty": "easy",
+    "points": 100,
+    "hint": "use if else to condition the cases",
+    "tags": [
+      "Basic Input/Output",
+      "If-Else"
+    ],
+    "hint_cost": 10,
+    "test_cases": [
+      {"input":70,"output":"B"},
+      {"input":34,"output":"F"},
+      {"input":59,"output":"D+"}
+    ],
+    "input_format": "An Integer like 0,1,2,... and so on.",
+    "output_format": "A single character representing the grades (A,B,B+,...)",
+    "author": "Umbs",
+    "status": "draft",
+    "solves": 0,
+    "hidden_test_cases": [
+      {"input":246,"output":"Invalid score!"},
+      {"input":0,"output":"F"},
+      {"input":100,"output":"A"},
+      {"input":80,"output":"A"}
+    ],
+    "starter": "",
+    "template": "",
+    "solution": ""
+  }
+}

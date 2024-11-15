@@ -1,0 +1,44 @@
+meta {
+  name: Create-Problem
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://161.246.5.48:3777/problems/create
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "title": "Even or Odd",
+    "description": "Define a function which takes in a single integer and returns true if the integer is even, otherwise return false.",
+    "difficulty": "easy",
+    "points": 100,
+    "hint": "modulo can be helpful for dealing with remainders",
+    "tags": [
+      "math",
+      "If-Else"
+    ],
+    "hint_cost": 30,
+    "test_cases": [
+      {"input":2,"output":"True"},
+      {"input":7,"output":"False"},
+      {"input":0,"output":"True"}
+    ],
+    "input_format": "An Integer like 0,1,2,... and so on.",
+    "output_format": "python's boolean (True, False)",
+    "author": "Umbs",
+    "status": "draft",
+    "solves": 0,
+    "hidden_test_cases": [
+      {"input":246,"output":"True"},
+      {"input":235461,"output":"False"},
+      {"input":4355,"output":"False"}
+    ],
+    "starter": "def even_odd(number):\n\t# your code here",
+    "template": "",
+    "solution": ""
+  }
+}

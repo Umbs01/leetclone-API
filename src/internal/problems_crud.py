@@ -5,8 +5,6 @@ from sqlalchemy import any_
 from ..database.db_models.problems import Problems
 from ..models.problems import CreateProblemModel, UpdateProblemModel
 
-import json
-
 # get all problems
 def get_all_problems(db: Session):
     return db.query(Problems).all()
@@ -31,6 +29,8 @@ def create_problem(db: Session, problem_model: CreateProblemModel):
                           , hidden_test_cases = problem_model.hidden_test_cases
                           , input_format = problem_model.input_format
                           , output_format = problem_model.output_format
+                          , template = problem_model.template
+                          , starter = problem_model.starter
                           , solution = problem_model.solution
                           , difficulty = problem_model.difficulty
                           , tags = problem_model.tags

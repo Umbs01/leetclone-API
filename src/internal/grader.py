@@ -3,7 +3,7 @@ def trim(code: str) -> str:
     # removes leading and trailing whitespaces
     return code.strip()
 
-def check_output(outputs: list[str], testcases: list[dict]) -> list: # will do this after finals
+def check_output(outputs: list[str], testcases: list[dict[str,str]]): # will do this after finals
     results = []
     for output, testcase in zip(outputs, testcases):
         output = trim(output)
@@ -12,7 +12,7 @@ def check_output(outputs: list[str], testcases: list[dict]) -> list: # will do t
         else:
             results.append(False)
     results = zip(testcases, results)
-    return results # type: ignore
+    return results 
 
 def isAccepted(results: list) -> bool:
     # check if all test cases passed (all True)

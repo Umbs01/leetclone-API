@@ -35,4 +35,4 @@ def run(problem_model: ProblemSubmitModel, id: str, db=Depends(get_db)):
     # check if the output is correct
     results = check_output(outputs, problem.test_cases) # type: ignore 
     
-    return JSONResponse(content={"results": results, "full_code": full_code, "outputs": outputs})
+    return JSONResponse(content={"results": results, "full_code": full_code})

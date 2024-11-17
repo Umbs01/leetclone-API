@@ -77,7 +77,7 @@ def handle_run_code(code: str, test_cases: list[dict]) -> list:
         return results
     
     for test_case in test_cases:
-        inputs = parsing_input(test_case['input'])
+        inputs = parsing_input(str(test_case['input']))
         run_code(code, *inputs)
         output = read_output()
         results.append(output)

@@ -38,7 +38,7 @@ body:json {
       {"input":4355,"output":"False"}
     ],
     "starter": "def even_odd(number):\n\t# your code here",
-    "template": "",
-    "solution": ""
+    "template": "import sys\n\ndef main():\n    x = int(sys.argv[1])\n    return even_odd(x)\n",
+    "solution": "def even_odd(x):\n    if x % 2 == 0:\n        return True\n    else:\n        return False\n"
   }
 }

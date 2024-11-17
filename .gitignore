@@ -33,3 +33,5 @@ alembic.ini
 
 # Windows
 run main.bat
+
+test.py

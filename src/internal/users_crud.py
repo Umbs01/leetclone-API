@@ -2,6 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import or_
 from ..utils.security import hash_password 
 from fastapi import HTTPException
+from typing import Optional
 import re
 from ..database.db_models.users import User
 from ..models import users
@@ -54,6 +55,5 @@ def create_user(db: Session, user_model: users.CreateUserModel, role: str = "stu
     return db_user
 
 # Get user by student_id
-def get_user_by_student_id(db: Session, student_id: str) -> User:
+def get_user_by_student_id(db: Session, student_id: str) -> Optional[User]:
     return db.query(User).filter(User.student_id == student_id).first()
-

@@ -18,24 +18,21 @@ def run_code(text, *args):
         output = result.stdout.decode('utf-8')
         errors = result.stderr.decode('utf-8')
 
-        try:
-            # Write output to file 'output.txt'
-            result = subprocess.run(['sudo', 'tee', f'{get_settings().SANDBOX_PATH}/output.txt'], input=output.encode('utf-8'),
-                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
-            stderr = result.stderr.decode('utf-8') # errors
-
-            if stderr:
-                raise Exception(f"Error writing output: {stderr}")
-            
-        except Exception as e:
-            raise Exception(f"Error writing output: {e}")
-
         # if code cannot be interpreted, write the error to 'output.txt'
         if errors:
             subprocess.run(['sudo', 'tee', f'{get_settings().SANDBOX_PATH}/output.txt'], input=errors.encode('utf-8'),
                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             raise subprocess.CalledProcessError(1, 'isolate', output=errors)
+
+        # Write output to file 'output.txt'
+        result = subprocess.run(['sudo', 'tee', f'{get_settings().SANDBOX_PATH}/output.txt'], input=output.encode('utf-8'),
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        stderr = result.stderr.decode('utf-8') # errors
+
+        if stderr:
+            raise Exception(f"Error writing output: {stderr}")
+            
     
     except subprocess.CalledProcessError as e:
         print(f"Error running command: {e}")
@@ -62,7 +59,7 @@ def read_output():
 
 
 def combine_code(template, code) -> str:
-    return template + '\n' + code + '\n\nif __name__ == \"__main__\":\n    main()"'
+    return template + '\n' + code + '\n\nif __name__ == \"__main__\":\n    main()\n'
 
 # input = "1 2 3 4 5" called to run_code(code, 1, 2, 3, 4, 5)
 def parsing_input(input: str) -> list:

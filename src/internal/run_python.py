@@ -18,24 +18,27 @@ def run_code(text, *args):
         output = result.stdout.decode('utf-8')
         errors = result.stderr.decode('utf-8')
 
+        try:
+            # Write output to file 'output.txt'
+            result = subprocess.run(['sudo', 'tee', f'{get_settings().SANDBOX_PATH}/output.txt'], input=output.encode('utf-8'),
+                                    stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+            stderr = result.stderr.decode('utf-8') # errors
+
+            if stderr:
+                raise Exception(f"Error writing output: {stderr}")
+            
+        except Exception as e:
+            raise Exception(f"Error writing output: {e}")
+
         # if code cannot be interpreted, write the error to 'output.txt'
         if errors:
             subprocess.run(['sudo', 'tee', f'{get_settings().SANDBOX_PATH}/output.txt'], input=errors.encode('utf-8'),
                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             raise subprocess.CalledProcessError(1, 'isolate', output=errors)
-
-        # Write output to file 'output.txt'
-        result = subprocess.run(['sudo', 'tee', f'{get_settings().SANDBOX_PATH}/output.txt'], input=output.encode('utf-8'),
-                                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
-        stderr = result.stderr.decode('utf-8') # errors
-
-        if stderr:
-            raise Exception(f"Error writing output: {stderr}")
-            
     
     except subprocess.CalledProcessError as e:
-        print(f"Error running command: {e}")
+        raise Exception(f"Error running code: {e}")
 
 
 def read_output():
@@ -74,7 +77,7 @@ def handle_run_code(code: str, test_cases: list[dict]) -> list:
         return results
     
     for test_case in test_cases:
-        inputs = parsing_input(str(test_case['input']))
+        inputs = parsing_input((test_case['input']))
         run_code(code, *inputs)
         output = read_output()
         results.append(output)

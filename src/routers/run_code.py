@@ -1,16 +1,17 @@
 from fastapi import APIRouter, Depends
 from fastapi.responses import JSONResponse
+from sqlalchemy.orm import Session
 
 from ..utils.dependencies import get_db
-from ..internal.run_python import handle_run_code, read_output, combine_code 
+from ..internal.run_python import handle_run_code, combine_code 
 from ..models.problems import ProblemSubmitModel
 from ..internal.problems_crud import get_problem_by_id
-from ..internal.grader import check_output
+from ..internal.grader import check_output, mutate_to_string
 
 router = APIRouter(prefix="/run-code", tags=["run-code"], responses={404: {"description": "Not found"}})
 
 @router.post("/{id}")
-def run(problem_model: ProblemSubmitModel, id: str, db=Depends(get_db)):
+def run(problem_model: ProblemSubmitModel, id: str, db:Session=Depends(get_db)):
     # validate the test case
     try:
         problem = get_problem_by_id(db, id)
@@ -26,13 +27,16 @@ def run(problem_model: ProblemSubmitModel, id: str, db=Depends(get_db)):
     # combine template with the submitted code
     full_code = combine_code(problem.template, problem_model.code)
     
+    test_cases = problem.test_cases
+    
     # run the code with or without test cases {input: '...', output: '...'}
-    if len(problem.test_cases) > 0: # type: ignore
-        outputs = handle_run_code(full_code, problem.test_cases) # type: ignore
+    if len(test_cases) > 0: # type: ignore
+        outputs = handle_run_code(full_code, test_cases) # type: ignore
     else:
         outputs = handle_run_code(full_code, [])
 
     # check if the output is correct
-    results = check_output(outputs, problem.test_cases) # type: ignore 
+    test_cases = mutate_to_string(test_cases) # type: ignore
+    results = check_output(outputs, test_cases) # type: ignore
     
     return JSONResponse(content={"results": results, "full_code": full_code})

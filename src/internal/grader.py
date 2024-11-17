@@ -9,6 +9,12 @@ def trim(code: str) -> str:
     # removes leading and trailing whitespaces
     return code.strip()
 
+def mutate_to_string(testcases: list[dict]) -> list[dict[str,str]]:
+    for testcase in testcases:
+        testcase['input'] = str(testcase['input'])
+        testcase['output'] = str(testcase['output'])
+    return testcases
+
 def check_output(outputs: list[str], testcases: list[dict[str,str]]): # will do this after finals
     summary = Result(testcases=testcases, results=[])
     results = []

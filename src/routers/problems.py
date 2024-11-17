@@ -8,7 +8,7 @@ from ..utils.dependencies import get_db, get_current_user
 
 router = APIRouter(prefix="/problems", tags=["problems"], responses={404: {"description": "Not found"}})
 
-@router.get("/", response_model=list[SimpleProblemModel])
+@router.get("", response_model=list[SimpleProblemModel])
 def get_all_problems(db: Session = Depends(get_db)):
     return problems_crud.get_all_problems(db)
 

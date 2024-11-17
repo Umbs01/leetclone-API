@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from ..utils.dependencies import get_db
 from ..models.submission import SubmissionModel
 from ..internal.submissions_crud import submit, get_submissions_by_user
@@ -14,5 +14,7 @@ def submitproblem(submission: SubmissionModel, db = Depends(get_db)):
 
 @router.get("/{user_id}")
 def getsubmissions(user_id: str, db = Depends(get_db)):
-    return get_submissions_by_user(db, user_id)
-
+    try:
+        get_submissions_by_user(db, user_id)
+    except:
+        raise HTTPException(status_code=404, detail="User not found")

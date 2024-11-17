@@ -62,7 +62,7 @@ def read_output():
 
 
 def combine_code(template, code) -> str:
-    return template + '\n' + code
+    return template + '\n' + code + '\n\nif __name__ == \"__main__\":\n    main()"'
 
 # input = "1 2 3 4 5" called to run_code(code, 1, 2, 3, 4, 5)
 def parsing_input(input: str) -> list:

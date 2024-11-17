@@ -11,6 +11,9 @@ def get_all_users(db=Depends(get_db)):
 
 @router.get("/{student_id}", response_model=ResponseUserModel)
 def get_user_by_id(student_id: str, db=Depends(get_db)):
+    student_id = str(student_id)
+    if len(student_id) != 8:
+        raise HTTPException(status_code=400, detail="Invalid student id")
     try:
         get_user_by_student_id(db, student_id)
     except:
@@ -18,7 +21,7 @@ def get_user_by_id(student_id: str, db=Depends(get_db)):
 
 @router.post("/create-admin", response_model=ResponseUserModel) 
 def create_admin(creds: CreateUserModel, token: str, db=Depends(get_db)):
-    db_user = get_user_by_id(db, creds.student_id)
+    db_user = get_user_by_student_id(db, creds.student_id)
     if db_user:
         raise HTTPException(status_code=400, detail="User already exists")
     

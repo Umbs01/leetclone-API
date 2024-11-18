@@ -14,10 +14,10 @@ def submitproblem(submission: SubmissionModel, db = Depends(get_db)):
         get_user_by_student_id(db, submission.owner)
     except:
         raise HTTPException(status_code=404, detail="User not found")
-#    try:
-    return submit(db, submission)
-#    except Exception as e:
-#        return {"error": str(e)}
+    try:
+        return submit(db, submission)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 @router.get("/{user_id}")
 def getsubmissions(user_id: str, db = Depends(get_db)):

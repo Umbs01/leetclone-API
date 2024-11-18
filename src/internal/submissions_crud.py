@@ -10,7 +10,7 @@ from .users_crud import get_user_by_student_id
 def submit(db: Session, submission: SubmissionModel):
     time_now = datetime.now()
     owner = get_user_by_student_id(db, submission.owner)
-    problem = get_problem_by_id(db, submission.problem_id)
+    problem = get_problem_by_id(db, str(submission.problem_id))
 
     # combine submitted code with template
     full_code = problem.template + submission.code # type: ignore

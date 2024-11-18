@@ -15,7 +15,7 @@ def mutate_to_string(testcases: list[dict]) -> list[dict[str,str]]:
         testcase['output'] = str(testcase['output'])
     return testcases
 
-def check_output(outputs: list[str], testcases: list[dict[str,str]]): # will do this after finals
+def check_output(outputs: list[str], testcases: list[dict[str,str]]):
     summary = Result(testcases=testcases, results=[])
     results = []
     for output, testcase in zip(outputs, testcases):

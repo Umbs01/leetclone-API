@@ -26,11 +26,11 @@ def check_output(outputs: list[str], testcases: list[dict[str,str]]):
         else:
             results.append(False)
     summary.results = results
-    return summary
+    return results
 
 def isAccepted(results: list) -> bool:
     # check if all test cases passed (all True)
-    for _, result in results:
+    for result in results:
         if not result:
             return False
 

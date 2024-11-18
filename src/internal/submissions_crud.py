@@ -6,6 +6,7 @@ from .run_python import handle_run_code
 from .grader import isAccepted, check_output
 from .problems_crud import get_problem_by_id
 from .users_crud import get_user_by_student_id
+from ..internal.run_python import combine_code
 
 def submit(db: Session, submission: SubmissionModel):
     time_now = datetime.now()
@@ -13,14 +14,20 @@ def submit(db: Session, submission: SubmissionModel):
     problem = get_problem_by_id(db, str(submission.problem_id))
 
     # combine submitted code with template
-    full_code = problem.template + submission.code # type: ignore
+    full_code = combine_code(problem.template, submission.code) # type: ignore
     # combine hidden test cases with test cases
     all_test_cases = problem.test_cases + problem.hidden_test_cases # type: ignore
     # run the code and grade it
     outputs = handle_run_code(full_code, all_test_cases) # type: ignore
     code_results = check_output(outputs, all_test_cases) # type: ignore
-    result = isAccepted(code_results.model_dump()) # type: ignore
+    result = isAccepted(code_results) # type: ignore
     
+    # debug
+    print(f"Problem Template: {problem.template}, Submission Code: {submission.code}")
+    print(f"Test Cases: {problem.test_cases}, Hidden Test Cases: {problem.hidden_test_cases}")
+    print(f"All Test Cases: {all_test_cases}")
+    print(f"Outputs: {outputs}")
+
     if not owner:
         raise ValueError("User not found")
     if not problem:
@@ -46,8 +53,7 @@ def submit(db: Session, submission: SubmissionModel):
 
         db.add(owner)
         db.add(problem)
-    else:
-        raise ValueError("Submission failed, please check your code.")
+
     db.commit()
     db.refresh(db_submission)
     

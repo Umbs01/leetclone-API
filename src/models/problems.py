@@ -52,7 +52,7 @@ class UpdateProblemModel(BaseModel):
 
 class ProblemSubmitModel(BaseModel):
     test_cases: list
-    additional_test_cases: list
+    additional_test_cases: Optional[list] = None
     code: str
     
  

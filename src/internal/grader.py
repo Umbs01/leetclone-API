@@ -19,6 +19,7 @@ def check_output(outputs: list[str], testcases: list[dict[str,str]]):
     summary = Result(testcases=testcases, results=[])
     results = []
     for output, testcase in zip(outputs, testcases):
+        output = output.split('\n')[0] # get the first line of the output (which is usually the answer)
         output = trim(output)
         if output == testcase['output']:
             results.append(True)

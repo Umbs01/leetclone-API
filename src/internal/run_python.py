@@ -56,8 +56,8 @@ def run_code(text, *args):
             ['sudo', 'isolate', '--box-id=0', '--mem=102400', '--time=3', '--run', '--', '/usr/bin/python3', 'script.py', *args],
             check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-        output = result.stdout.decode('utf-8')
-        errors = result.stderr.decode('utf-8') 
+        output = result.stdout.decode('utf-8') 
+        errors = result.stderr.decode('utf-8')  
 
         try:
             with open(f'{get_settings().SANDBOX_PATH}/output.txt', 'w') as output_file:
@@ -69,7 +69,7 @@ def run_code(text, *args):
         # If there are Python script errors, raise an error and write it to 'output.txt'
         if errors:
             with open(f'{get_settings().SANDBOX_PATH}/output.txt', 'w') as output_file:
-                output_file.write(errors)  
+                output_file.write(errors)  # Append stderr to the output file
             raise subprocess.CalledProcessError(1, 'isolate', output=errors)
 
     except subprocess.CalledProcessError as e:

@@ -3,7 +3,7 @@ from datetime import datetime
 from ..database.db_models import Submission
 from ..models.submission import SubmissionModel
 from .run_python import handle_run_code
-from .grader import isAccepted
+from .grader import isAccepted, check_output
 from .problems_crud import get_problem_by_id
 from .users_crud import get_user_by_student_id
 
@@ -18,7 +18,8 @@ def submit(db: Session, submission: SubmissionModel):
     all_test_cases = problem.test_cases + problem.hidden_test_cases # type: ignore
     # run the code and grade it
     outputs = handle_run_code(full_code, all_test_cases) # type: ignore
-    result = isAccepted(outputs, all_test_cases) # type: ignore
+    code_results = check_output(outputs, all_test_cases) # type: ignore
+    result = isAccepted(code_results.model_dump()) # type: ignore
     
     if not owner:
         raise ValueError("User not found")
@@ -45,7 +46,8 @@ def submit(db: Session, submission: SubmissionModel):
 
         db.add(owner)
         db.add(problem)
-    
+    else:
+        raise ValueError("Submission failed, please check your code.")
     db.commit()
     db.refresh(db_submission)
     

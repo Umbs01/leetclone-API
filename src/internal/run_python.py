@@ -103,12 +103,17 @@ def combine_code(template, code) -> str:
 def parsing_input(input: str) -> list:
     return input.split(' ')
 
+def clear_output():
+    with open(f'{get_settings().SANDBOX_PATH}/output.txt', 'w') as f:
+        f.write('')
+
 def handle_run_code(code: str, test_cases: list[dict]) -> list:
     results = []
     if test_cases == []:
         run_code(code)
         output = read_output()
         results.append(output)
+        clear_output()
         return results
     
     for test_case in test_cases:
@@ -116,4 +121,5 @@ def handle_run_code(code: str, test_cases: list[dict]) -> list:
         run_code(code, *inputs)
         output = read_output()
         results.append(output)
+        clear_output()
     return results

@@ -39,4 +39,4 @@ def run(problem_model: ProblemSubmitModel, id: str, db:Session=Depends(get_db)):
     test_cases = mutate_to_string(test_cases) # type: ignore
     results = check_output(outputs, test_cases) # type: ignore
     
-    return JSONResponse(content={"output": outputs, "full_code": full_code, "results": results})
+    return JSONResponse(content={"results": results})

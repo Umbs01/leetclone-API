@@ -53,7 +53,7 @@ def create_problem(problem: CreateProblemModel, db: Session = Depends(get_db)):
 
 @router.put("/update/{id}", response_model=UpdateProblemModel)
 def update_problem(id: str, problem: UpdateProblemModel, db: Session = Depends(get_db)):
-    db_problem = problems_crud.get_problem_by_title(db, id)
+    db_problem = problems_crud.get_problem_by_id(db, id)
     if not db_problem:
         raise HTTPException(status_code=404, detail="Problem not found")
     
@@ -82,7 +82,7 @@ def update_problem(id: str, problem: UpdateProblemModel, db: Session = Depends(g
 
 @router.delete("/delete/{id}")
 def delete_problem(id: str, token: str, db: Session = Depends(get_db)):
-    db_problem = problems_crud.get_problem_by_title(db, id)
+    db_problem = problems_crud.get_problem_by_id(db, id)
     if not db_problem:
         raise HTTPException(status_code=404, detail="Problem not found")
     

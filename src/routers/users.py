@@ -10,7 +10,7 @@ def get_all_users(db=Depends(get_db)):
     return get_users(db)
 
 @router.get("/{student_id}", response_model=ResponseUserModel)
-def get_user_by_id(student_id: str, db=Depends(get_db)):
+def get_user_by_id(student_id: str, token: str, db=Depends(get_db)):
     # Validate student ID length
     if len(student_id) != 8:
         raise HTTPException(status_code=400, detail="Invalid student ID")
@@ -19,6 +19,11 @@ def get_user_by_id(student_id: str, db=Depends(get_db)):
     user = get_user_by_student_id(db, student_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
+
+    # Fetch current user
+    current_user = get_current_user(db, token)
+    if not current_user:
+        raise HTTPException(status_code=401, detail="Unauthorized") 
 
     return user
 

@@ -68,7 +68,7 @@ def run_code(text, *args):
 
         # If there are Python script errors, raise an error and write it to 'output.txt'
         if errors:
-            with open(f'{get_settings().SANDBOX_PATH}/output.txt', 'w') as output_file:
+            with open(f'{get_settings().SANDBOX_PATH}/output.txt', 'a') as output_file:
                 output_file.write(errors)  # Append stderr to the output file
             raise subprocess.CalledProcessError(1, 'isolate', output=errors)
 

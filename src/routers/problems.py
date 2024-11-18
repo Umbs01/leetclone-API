@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 
 from ..internal import problems_crud
 from ..models.problems import ProblemModel, UpdateProblemModel, CreateProblemModel, SimpleProblemModel
+from ..internal.users_crud import get_user_by_student_id
 from ..utils.dependencies import get_db, get_current_user
 
 router = APIRouter(prefix="/problems", tags=["problems"], responses={404: {"description": "Not found"}})
@@ -24,7 +25,8 @@ def create_problem(problem: CreateProblemModel, db: Session = Depends(get_db)):
     db_problem = problems_crud.get_problem_by_title(db, problem.title)
     if db_problem:
         raise HTTPException(status_code=400, detail="Problem already exists")
-    
+    if get_user_by_student_id(db, problem.author) is None:
+        raise HTTPException(status_code=400, detail="Author's student id not found")
     try:
         problem = CreateProblemModel(
             title=problem.title,

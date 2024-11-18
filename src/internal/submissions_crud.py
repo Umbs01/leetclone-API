@@ -23,10 +23,10 @@ def submit(db: Session, submission: SubmissionModel):
     result = isAccepted(code_results) # type: ignore
     
     # debug
-    print(f"Problem Template: {problem.template}, Submission Code: {submission.code}")
-    print(f"Test Cases: {problem.test_cases}, Hidden Test Cases: {problem.hidden_test_cases}")
-    print(f"All Test Cases: {all_test_cases}")
-    print(f"Outputs: {outputs}")
+    # print(f"Problem Template: {problem.template}, Submission Code: {submission.code}")
+    # print(f"Test Cases: {problem.test_cases}, Hidden Test Cases: {problem.hidden_test_cases}")
+    # print(f"All Test Cases: {all_test_cases}")
+    # print(f"Outputs: {outputs}")
 
     if not owner:
         raise ValueError("User not found")

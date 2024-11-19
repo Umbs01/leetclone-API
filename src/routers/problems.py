@@ -15,7 +15,7 @@ def get_all_problems(db: Session = Depends(get_db)):
 
 @router.get("/{id}", response_model=ProblemModel)
 def get_problem_by_id(id: str, db: Session = Depends(get_db)):
-    if is_valid_uuid(id):
+    if !is_valid_uuid(id):
         raise HTTPException(status_code=400, detail="Invalid UUID")
     db_problem = problems_crud.get_problem_by_id(db, id)
     if not db_problem:
@@ -55,7 +55,7 @@ def create_problem(problem: CreateProblemModel, db: Session = Depends(get_db)):
 
 @router.put("/update/{id}", response_model=UpdateProblemModel)
 def update_problem(id: str, problem: UpdateProblemModel, db: Session = Depends(get_db)):
-    if is_valid_uuid(id):
+    if !is_valid_uuid(id):
         raise HTTPException(status_code=400, detail="Invalid UUID")
     db_problem = problems_crud.get_problem_by_id(db, id)
     if not db_problem:
@@ -86,7 +86,7 @@ def update_problem(id: str, problem: UpdateProblemModel, db: Session = Depends(g
 
 @router.delete("/delete/{id}")
 def delete_problem(id: str, token: str, db: Session = Depends(get_db)):
-    if is_valid_uuid(id):
+    if !is_valid_uuid(id):
         raise HTTPException(status_code=400, detail="Invalid UUID")
     db_problem = problems_crud.get_problem_by_id(db, id)
     if not db_problem:
@@ -126,7 +126,7 @@ def search_problem_by_difficulty(difficulty: str, db: Session = Depends(get_db))
 
 @router.post("/hint/{id}")
 def get_hint(id: str, token: str, db: Session = Depends(get_db)):
-    if is_valid_uuid(id):
+    if !is_valid_uuid(id):
         raise HTTPException(status_code=400, detail="Invalid UUID")
     db_problem = problems_crud.get_problem_by_id(db, id)
     if not db_problem:

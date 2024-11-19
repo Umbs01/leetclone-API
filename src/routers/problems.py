@@ -137,7 +137,7 @@ def get_hint(id: str, token: str, db: Session = Depends(get_db)):
         if user.score < db_problem.hint_cost: # type: ignore
             raise HTTPException(status_code=400, detail="Not enough score")
         if id in user.hint_used:
-            raise HTTPException(status_code=400, detail="Hint already used")
+            return {"hint": db_problem.hint} 
         user.score -= db_problem.hint_cost # type: ignore
         user.hint_used.append(id)
         db.commit()

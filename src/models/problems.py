@@ -16,12 +16,12 @@ class ProblemModel(BaseModel):
     author: str
     status: str
     solves: int
+    starter: str
 
 class CreateProblemModel(ProblemModel):
     hidden_test_cases: list
     solution: str
     template: str
-    starter: str
 
 class SimpleProblemModel(BaseModel):
     id: UUID

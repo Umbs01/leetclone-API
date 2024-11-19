@@ -43,7 +43,7 @@ def submit(db: Session, submission: SubmissionModel):
 
     # Check if user already solved this problem
     if any(solved_problem["problem_id"] == submission.problem_id for solved_problem in owner.solved_problems):
-        raise ValueError("User already solved this problem")
+        result = False
 
     # If the submission is accepted, update the user's score and the problem's solves
     if result:

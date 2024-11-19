@@ -27,7 +27,10 @@ def run(problem_model: ProblemSubmitModel, id: str, db:Session=Depends(get_db)):
     # combine template with the submitted code
     full_code = combine_code(problem.template, problem_model.code)
     
-    test_cases = problem.test_cases + problem_model.additional_test_cases
+    if problem_model.additional_test_cases:
+        test_cases = problem.test_cases + problem_model.additional_test_cases
+    else:
+        test_cases = problem.test_cases
     
     # run the code with or without test cases {input: '...', output: '...'}
     if len(test_cases) > 0: # type: ignore

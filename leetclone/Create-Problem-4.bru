@@ -1,0 +1,45 @@
+meta {
+  name: Create-Problem-4
+  type: http
+  seq: 5
+}
+
+post {
+  url: http://161.246.5.48:3777/problems/create
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "title": "Longest Substring Without Repeating Characters",
+    "description": "Given a string s, find the length of the longest substring without repeating characters.",
+    "difficulty": "hard",
+    "points": 300,
+    "hint": "Use a sliding window or hash set to keep track of seen characters and their indices.",
+    "tags": [
+      "string-processing",
+      "sliding-window",
+      "hash-set"
+    ],
+    "hint_cost": 100,
+    "test_cases": [
+      {"input": "abcabcbb", "output": "3"},
+      {"input": "bbbbb", "output": "1"},
+      {"input": "pwwkew", "output": "3"}
+    ],
+    "input_format": "A single string of lowercase and/or uppercase letters.",
+    "output_format": "An integer representing the length of the longest substring without repeating characters.",
+    "author": "66011072",
+    "status": "draft",
+    "solves": 0,
+    "hidden_test_cases": [
+      {"input": "abcdefg", "output": "7"},
+      {"input": "aabbcc", "output": "2"},
+      {"input": "abcadabc", "output": "4"}
+    ],
+    "starter": "def length_of_longest_substring(s):\n\t# your code here",
+    "template": "import sys\n\ndef main():\n    s = sys.argv[1]\n    result = length_of_longest_substring(s)\n    print(result)\n",
+    "solution": "def length_of_longest_substring(s):\n    char_index_map = {}\n    left = 0\n    max_length = 0\n    \n    for right in range(len(s)):\n        if s[right] in char_index_map and char_index_map[s[right]] >= left:\n            left = char_index_map[s[right]] + 1\n        \n        char_index_map[s[right]] = right\n        max_length = max(max_length, right - left + 1)\n    \n    return max_length"
+  }
+}

@@ -16,10 +16,12 @@ class ProblemModel(BaseModel):
     author: str
     status: str
     solves: int
+    starter: str
 
 class CreateProblemModel(ProblemModel):
     hidden_test_cases: list
     solution: str
+    template: str
 
 class SimpleProblemModel(BaseModel):
     id: UUID
@@ -45,9 +47,12 @@ class UpdateProblemModel(BaseModel):
     status: Optional[str]
     hidden_test_cases: Optional[list]
     solution: Optional[str]
+    template: Optional[str]
+    starter: Optional[str]
 
 class ProblemSubmitModel(BaseModel):
     test_cases: list
+    additional_test_cases: Optional[list] = None
     code: str
     
-    
+ 

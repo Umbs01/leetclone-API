@@ -1,0 +1,44 @@
+meta {
+  name: Create-Problem-3
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://161.246.5.48:3777/problems/create
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "title": "Sum of Positive Numbers",
+    "description": "Define a function that takes a space-separated string of integers and returns the sum of all positive numbers in the input. If there are no positive numbers, return 0.",
+    "difficulty": "medium",
+    "points": 150,
+    "hint": "You can split the input string and convert each element to an integer.",
+    "tags": [
+      "math",
+      "string-processing"
+    ],
+    "hint_cost": 40,
+    "test_cases": [
+      {"input": "1 -2 3 4", "output": "8"},
+      {"input": "-1 -2 -3", "output": "0"},
+      {"input": "0 5 7", "output": "12"}
+    ],
+    "input_format": "A space-separated string of integers, such as '1 -2 3 4'.",
+    "output_format": "An integer representing the sum of positive numbers.",
+    "author": "66011072",
+    "status": "draft",
+    "solves": 0,
+    "hidden_test_cases": [
+      {"input": "10 -10 20", "output": "30"},
+      {"input": "-100 0 100", "output": "100"},
+      {"input": "50 50 -50", "output": "100"}
+    ],
+    "starter": "def sum_of_positives(arr):\n\t# your code here",
+    "template": "import sys\n\ndef main():\n    args = map(int, sys.argv[1:])\n    result = sum_of_positives(args)\n    print(result)\n",
+    "solution": "def sum_of_positives(arr):\n    return sum(x for x in arr if x > 0)"
+  }
+}

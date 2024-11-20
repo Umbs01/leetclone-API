@@ -4,16 +4,19 @@ from sqlalchemy.orm import Session
 
 from ..internal import problems_crud
 from ..models.problems import ProblemModel, UpdateProblemModel, CreateProblemModel, SimpleProblemModel
-from ..utils.dependencies import get_db, get_current_user
+from ..internal.users_crud import get_user_by_student_id
+from ..utils.dependencies import get_db, get_current_user, is_valid_uuid
 
 router = APIRouter(prefix="/problems", tags=["problems"], responses={404: {"description": "Not found"}})
 
-@router.get("/", response_model=list[SimpleProblemModel])
+@router.get("", response_model=list[SimpleProblemModel])
 def get_all_problems(db: Session = Depends(get_db)):
     return problems_crud.get_all_problems(db)
 
 @router.get("/{id}", response_model=ProblemModel)
 def get_problem_by_id(id: str, db: Session = Depends(get_db)):
+    if not is_valid_uuid(id):
+        raise HTTPException(status_code=400, detail="Invalid UUID")
     db_problem = problems_crud.get_problem_by_id(db, id)
     if not db_problem:
         raise HTTPException(status_code=404, detail="Problem not found")
@@ -24,7 +27,8 @@ def create_problem(problem: CreateProblemModel, db: Session = Depends(get_db)):
     db_problem = problems_crud.get_problem_by_title(db, problem.title)
     if db_problem:
         raise HTTPException(status_code=400, detail="Problem already exists")
-    
+    if get_user_by_student_id(db, problem.author) is None:
+        raise HTTPException(status_code=400, detail="Author's student id not found")
     try:
         problem = CreateProblemModel(
             title=problem.title,
@@ -41,7 +45,9 @@ def create_problem(problem: CreateProblemModel, db: Session = Depends(get_db)):
             tags=problem.tags,
             author=problem.author,
             status=problem.status,
-            solves=problem.solves
+            solves=0,
+            template=problem.template,
+            starter=problem.starter
         )
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -49,7 +55,9 @@ def create_problem(problem: CreateProblemModel, db: Session = Depends(get_db)):
 
 @router.put("/update/{id}", response_model=UpdateProblemModel)
 def update_problem(id: str, problem: UpdateProblemModel, db: Session = Depends(get_db)):
-    db_problem = problems_crud.get_problem_by_title(db, id)
+    if not is_valid_uuid(id):
+        raise HTTPException(status_code=400, detail="Invalid UUID")
+    db_problem = problems_crud.get_problem_by_id(db, id)
     if not db_problem:
         raise HTTPException(status_code=404, detail="Problem not found")
     
@@ -68,6 +76,8 @@ def update_problem(id: str, problem: UpdateProblemModel, db: Session = Depends(g
             difficulty=problem.difficulty,
             tags=problem.tags,
             status=problem.status,
+            template=problem.template,
+            starter=problem.starter
         )
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -76,7 +86,9 @@ def update_problem(id: str, problem: UpdateProblemModel, db: Session = Depends(g
 
 @router.delete("/delete/{id}")
 def delete_problem(id: str, token: str, db: Session = Depends(get_db)):
-    db_problem = problems_crud.get_problem_by_title(db, id)
+    if not is_valid_uuid(id):
+        raise HTTPException(status_code=400, detail="Invalid UUID")
+    db_problem = problems_crud.get_problem_by_id(db, id)
     if not db_problem:
         raise HTTPException(status_code=404, detail="Problem not found")
     
@@ -114,6 +126,8 @@ def search_problem_by_difficulty(difficulty: str, db: Session = Depends(get_db))
 
 @router.post("/hint/{id}")
 def get_hint(id: str, token: str, db: Session = Depends(get_db)):
+    if not is_valid_uuid(id):
+        raise HTTPException(status_code=400, detail="Invalid UUID")
     db_problem = problems_crud.get_problem_by_id(db, id)
     if not db_problem:
         raise HTTPException(status_code=404, detail="Problem not found")
@@ -123,7 +137,7 @@ def get_hint(id: str, token: str, db: Session = Depends(get_db)):
         if user.score < db_problem.hint_cost: # type: ignore
             raise HTTPException(status_code=400, detail="Not enough score")
         if id in user.hint_used:
-            raise HTTPException(status_code=400, detail="Hint already used")
+            return {"hint": db_problem.hint} 
         user.score -= db_problem.hint_cost # type: ignore
         user.hint_used.append(id)
         db.commit()

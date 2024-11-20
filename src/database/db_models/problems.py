@@ -14,11 +14,13 @@ class Problems(Base):
     hint = Column(String)
     hint_cost = Column(Integer, default=0)
     description = Column(String, nullable=False)
-    test_cases = Column(PickleType, default=[])
-    hidden_test_cases = Column(PickleType, default=[])
+    test_cases = Column(PickleType, default=[]) # list of test cases {'input': '...', 'output': '...'}
+    hidden_test_cases = Column(PickleType, default=[]) # same as test_cases
     input_format = Column(String, default="")
     output_format = Column(String, default="")
     solution = Column(String, default="")
+    template = Column(String, default="")
+    starter = Column(String, default="")
     difficulty = Column(String, nullable=False)
     tags = Column(PickleType, default=[])
     author = Column(String, ForeignKey("users.student_id"))
@@ -28,3 +30,4 @@ class Problems(Base):
     updated_at = Column(DateTime)
 
     submissions = relationship("Submission", back_populates="prob")
+    

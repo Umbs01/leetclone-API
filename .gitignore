@@ -30,3 +30,8 @@ archive.zip
 .DS_Store
 
 alembic.ini
+
+# Windows
+run main.bat
+
+test.py

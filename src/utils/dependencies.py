@@ -3,6 +3,7 @@ import jwt
 from jwt import PyJWTError
 from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
+from uuid import UUID
 
 from ..database.db_models.users import User
 from ..config import get_settings
@@ -66,3 +67,9 @@ def get_current_user(db: Session, token: str = Depends(oauth2_scheme)):
         raise credentials_exception
     return user
 
+def is_valid_uuid(uuid: str):
+    try:
+        uuid_obj = UUID(uuid, version=4)
+    except ValueError:
+        return False
+    return str(uuid_obj) == uuid

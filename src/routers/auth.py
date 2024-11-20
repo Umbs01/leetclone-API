@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Depends
-
+import re
 from sqlalchemy.orm import Session
 
 from ..internal import users_crud
@@ -16,22 +16,16 @@ def register(creds: RegisterModel, db: Session = Depends(get_db)):
     db_user = users_crud.get_user(db, creds.student_id, creds.email)
     if db_user:
         raise HTTPException(status_code=400, detail="Student already registered")
-    
-    try: 
-        user = CreateUserModel(
-            student_id=creds.student_id,
-            username=creds.username,
-            email=creds.email,
-            password=creds.password,
-            solved_problems=[],
-            score=0,
-            role="student",
-            hint_used=[]
-        )
-    except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+    user = CreateUserModel(
+        student_id=creds.student_id,
+        username=creds.username,
+        email=creds.email,
+        password=creds.password,
+        solved_problems=[],
+        score=0,
+        hint_used=[]
+    )
     return users_crud.create_user(db, user)
-
 
 @router.post("/login", response_model=LoginResponseModel)
 def login(creds: LoginModel):

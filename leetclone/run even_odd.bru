@@ -1,0 +1,34 @@
+meta {
+  name: run even_odd
+  type: http
+  seq: 3
+}
+
+post {
+  url: http://161.246.5.48:3777/run-code/e305236a-d871-4e87-b23d-aa80dc31b8a3
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "test_cases": [
+      {
+        "input": "2",
+        "output": "True"
+      },
+      {
+        "input": "7",
+        "output": "False"
+      },
+      {
+        "input": "0",
+        "output": "True"
+      }
+    ],
+    "additional_test_cases": [
+      { "input":"74", "output":"True" }
+    ],
+    "code": "def even_odd(x):\n    if x % 2 == 0:\n        return True\n    else:\n        return False\n"
+  }
+}

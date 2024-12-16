@@ -17,6 +17,8 @@ class ProblemModel(BaseModel):
     status: str
     solves: int
     starter: str
+    solution: str
+    template: str
 
 class CreateProblemModel(ProblemModel):
     hidden_test_cases: list
